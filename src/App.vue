@@ -1,12 +1,22 @@
 <template>
   <div id="app">
     <h1>hello webpack</h1>
-    <p>测试webpack-dev-server</p>
+    <Testcss />
+    <Testless />
+    <Testscss />
   </div>
 </template>
 
 <script>
-export default {
+import Testcss from 'components/Testcss'
+import Testless from 'components/Testless'
+import Testscss from 'components/Testscss'
 
+export default {
+  components: {
+    Testcss,
+    Testless,
+    Testscss
+  }
 }
 </script>
