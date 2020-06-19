@@ -1,6 +1,6 @@
 const path = require('path')
-const resolvePath = (str) => {
-  return path.resolve(__dirname, str)
+const resolvePath = (dir) => {
+  return path.resolve(__dirname, dir)
 }
 
 const VueLoadPlugin = require('vue-loader/lib/plugin')
@@ -14,9 +14,15 @@ module.exports = {
     filename: 'bundle-[hash].js', // 配置hash后，打包的文件会带上哈希值
     path: resolvePath('dist')
   },
+  stats: { // 简化打印信息
+    assets: false,
+    builtAt: false,
+    modules: false,
+    entrypoints: false
+  },
   resolve: {
     extensions: ['.js', '.vue'],
-    alias: {
+    alias: { // 配置别名
       '@': resolvePath('src'),
       'components': resolvePath('src/components')
     }
@@ -37,9 +43,11 @@ module.exports = {
             options: {
               modules: true
             }
-          }
+          },
+          'postcss-loader'
         ]
       },
+      // loader 调用顺序是从右到左
       {
         test: /\.less$/,
         use: ['style-loader', 'css-loader', 'less-loader']
@@ -54,7 +62,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: resolvePath('./public/index.html')
     }), // htmlWebpackPlugin插件会在webpack打包结束后,自动帮我们生成一个HTML文件,并把打包生成的js自动引入到这个HTML文件中
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin(), // 清理dist目录
     new VueLoadPlugin()
   ]
 }
