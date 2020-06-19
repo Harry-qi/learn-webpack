@@ -110,4 +110,48 @@ module.exports = {
   ]
 }
 ```
-备注： 使用autoprefixer需要 npm install autoprefixer -D
+备注： 使用autoprefixer需要 npm install autoprefixer -D  
+9、 配置Babel(参考文章: [不容错过的 Babel7 知识](https://juejin.im/post/5ddff3abe51d4502d56bd143))  
+介绍：Babel是一个 JS 编译器，功能如下：
+- 语法转换
+- 通过 Polyfill 方式在目标环境中添加缺失的特性(@babel/polyfill模块)
+- 源码转换(codemods)  
+
+了解下Babel的核心概念：
+- 核心库 @babel/core   
+
+- plugins(插件)能够让Babel解析特定语法(注意：不是转换)。 
+我们使用箭头函数的时候，需要用@babel/plugin-transform-arrow-functions插件。  
+要是使用其他语法，又要配置其他插件，那这样会很累，所以Babel有一个preset(配置)来简化插件配置。  
+
+- preset  预设就是插件的集合，使用一个预设就是使用一组插件。  
+官方preset有
+- @babel/preset-env
+- @babel/preset-flow
+- @babel/preset-react
+- @babel/preset-typescript  
+语法转换只是将高版本的语法转换成低版本的，但是新的内置函数、实例方法无法转换。所以这时候需要polyfill。  
+
+- polyfill(垫片) 能够让新的内置函数、实例方法等在低版本浏览器中也可以使用。  
+@babel/preset-env 提供了一个 useBuiltIns 参数，设置值为 usage 时，就只会包含代码需要的 polyfill
+
+在webpack里面配置Babel  
+``` javascript
+rules:[
+  {
+    test: /\.js$/, // 匹配JS文件
+    use: 'babel-loader',
+    exclude: /node_modules/ // 排除node_modules目录
+  }
+]
+```
+在根目录创建.babelrc
+``` javascript
+{
+  "presets": ["@babel/env"]
+}
+```
+babel-loader会应用到普通的 `.js` 文件以及 `.vue` 文件中的 `<script>` 块
+注意: 
+- babel-loader版本要高于@babel/core一个版本不然报错(也就是说babel-loader是^8.1.0，@babel/core就得是^7.0.0)。
+- 解决方案：先下载babel-loader(npm i babel-loader -D)，然后会提示安装@babel/core的版本(npm i @babel/core@^7.0.0 -D)。

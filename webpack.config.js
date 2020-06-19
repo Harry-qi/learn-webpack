@@ -55,6 +55,13 @@ module.exports = {
       {
         test: /\.scss$/,
         use: ['style-loader', 'css-loader', 'sass-loader']
+      },
+      // babel-loader会应用到普通的 `.js` 文件
+      // 以及 `.vue` 文件中的 `<script>` 块
+      {
+        test: /\.js$/, // 匹配JS文件
+        use: 'babel-loader',
+        exclude: /node_modules/ // 排除node_modules目录
       }
     ]
   },
