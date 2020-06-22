@@ -155,3 +155,44 @@ babel-loader会应用到普通的 `.js` 文件以及 `.vue` 文件中的 `<scrip
 注意: 
 - babel-loader版本要高于@babel/core一个版本不然报错(也就是说babel-loader是^8.1.0，@babel/core就得是^7.0.0)。
 - 解决方案：先下载babel-loader(npm i babel-loader -D)，然后会提示安装@babel/core的版本(npm i @babel/core@^7.0.0 -D)。
+10. 利用`require.context`全局注册通用的基础组件  
+[参看官方文档](https://cn.vuejs.org/v2/guide/components-registration.html#%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C)
+``` javascript
+// 基础组件比较常用，所有全局注册
+
+import Vue from 'vue'
+
+// https://webpack.js.org/guides/dependency-management/#require-context
+const requireComponent = require.context(
+  // 寻找当前文件的common文件夹里面的组件
+  './common',
+  // 是否查询其子目录
+  false,
+  // 只匹配Base前缀的.vue文件
+  /Base[A-Z]\w+\.(vue|js)$/
+)
+
+// 匹配每个文件名字
+requireComponent.keys().forEach((fileName) => {
+  const componentConfig = requireComponent(fileName)
+  // 获取每个组件名字的首字母大写命名
+  // console.log(fileName) // './BaseButton.vue'
+
+  const componentName = fileName
+    // 移除 "./"
+    .replace(/^\.\//, '')
+    // 移除后缀名(.vue)
+    .replace(/\.\w+$/, '')
+  // console.log(componentName)
+
+  Vue.component(
+    componentName,
+    // 全局注册组件
+    // 如果这个组件选项是通过 `export default` 导出的，
+    // 那么就会优先使用 `.default`，
+    // 否则回退到使用模块的根。
+    componentConfig.default || componentConfig
+  )
+})
+
+```
