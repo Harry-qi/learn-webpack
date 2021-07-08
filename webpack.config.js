@@ -14,12 +14,8 @@ module.exports = {
     filename: 'bundle-[hash].js', // 配置hash后，打包的文件会带上哈希值
     path: resolvePath('dist')
   },
-  stats: { // 简化打印信息
-    assets: false,
-    builtAt: false,
-    modules: false,
-    entrypoints: false
-  },
+  devtool: 'eval-cheap-module-source-map',
+  stats: 'errors-only',
   resolve: {
     extensions: ['.js', '.vue'],
     alias: { // 配置别名

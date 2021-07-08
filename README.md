@@ -196,3 +196,12 @@ requireComponent.keys().forEach((fileName) => {
 })
 
 ```
+11. sourcemap 配置
+控制台报错，可以看到原始代码在哪一行报错。 
+注意：**开发环境**用： eval-cheap-module-source-map， **生产环境**用：hidden-source-map
+``` javascript  
+module.exports = {
+  // 省略 ...
+  devtool: 'eval-cheap-module-source-map',
+}
+```
